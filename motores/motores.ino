@@ -6,20 +6,17 @@ const int abajo = 2;
 
 const int fc0 = 4;
 const int fc1 = 5;
-const int fc2 = 6;
-const int fc3 = 7;
 
 
 int readArriba = HIGH;
 int readAbajo = HIGH;
 int readFc0 = HIGH;
 int readFc1 = HIGH;
-int readFc2 = HIGH;
-int readFc3 = HIGH;
 
 int piso = 0;
 
-bool flagActivo = false;
+bool flagArriba = false;
+bool flagAbajo = false;
 
 long debounceDelay = 500;
 
@@ -39,14 +36,20 @@ void setup() {
   pinMode(abajo, INPUT);
   pinMode(fc0, INPUT);
   pinMode(fc1, INPUT);
-  pinMode(fc2, INPUT);
-  pinMode(fc3, INPUT);
 
   Serial.begin(9600);
 
-  flagActivo = true;
+ Serial.println("buscando abajo");
+ 
+  while(readFc0==true){
   digitalWrite(dirPin, LOW);
-  Serial.println("Abajo");
+  stepMotor();
+  readFc0 = digitalRead(fc0);
+    
+    }
+
+  Serial.println("INICIO");
+  
 
 }
 void loop() {
@@ -55,94 +58,67 @@ void loop() {
   readAbajo = digitalRead(abajo);
   readFc0 = digitalRead(fc0);
   readFc1 = digitalRead(fc1);
-  readFc2 = digitalRead(fc2);
-  readFc3 = digitalRead(fc3);
 
-  if (readArriba == LOW && flagActivo == false) {
-    delay(debounceDelay);
+  if (readArriba == LOW ) {
+    
     if (readArriba == LOW) {
-      if (piso <= 3) {
-        piso++;
-        flagActivo = true;
+        
+        flagAbajo=false;
         digitalWrite(dirPin, HIGH);
-        Serial.println("Arriba");
-      }
+        if(flagArriba==false){
+         stepMotor();
+        }
 
 
     }
   }
 
 
-  if (readAbajo == LOW && flagActivo == false ) {
-    delay(debounceDelay);
+  if (readAbajo == LOW  ) {
+   
     if (readAbajo == LOW) {
-      piso = 0;
-      flagActivo = true;
+       flagArriba=false;
       digitalWrite(dirPin, LOW);
-      Serial.println("Abajo");
+       if(flagAbajo==false){
+         stepMotor();
+        }
+      
+       
     }
   }
 
 
-  if (piso == 0) {
 
 
-    if (readFc0 == LOW && flagActivo == true ) {
+
+    if (readFc0 == LOW  ) {
       delay(debounceDelay);
       if (readFc0 == LOW) {
-        flagActivo = false;;
+        flagAbajo = true;
         Serial.println("FC0");
       }
     }
-  }
+  
 
 
-  if (piso == 1) {
+ 
 
 
-    if (readFc1 == LOW && flagActivo == true ) {
+    if (readFc1 == LOW  ) {
       delay(debounceDelay);
       if (readFc1 == LOW) {
-        flagActivo = false;
+        flagArriba==true;
         Serial.println("FC1");
       }
     }
 
-  }
-
-
-  if (piso == 2) {
-
-    if (readFc2 == LOW && flagActivo == true ) {
-      delay(debounceDelay);
-      if (readFc2 == LOW) {
-        flagActivo = false;
-        Serial.println("FC2");
-      }
-    }
-  }
-
-  if (piso == 3) {
-
-
-    if (readFc3 == LOW && flagActivo == true ) {
-      delay(debounceDelay);
-      if (readFc3 == LOW) {
-        flagActivo = false;
-        Serial.println("FC3");
-      }
-    }
-
-
-  }
+  
 
 
 
-  if (flagActivo == false) {
 
-    stepMotor();
 
-  }
+
 
 
 }
