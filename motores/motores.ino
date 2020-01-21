@@ -29,16 +29,14 @@ int periodo = 100;
 unsigned long TiempoAhora = 0;
 
 void setup() {
+  
   pinMode(dirPin, OUTPUT);
   pinMode(stepPin, OUTPUT);
-
   pinMode(arriba, INPUT);
   pinMode(abajo, INPUT);
   pinMode(fc0, INPUT);
   pinMode(fc1, INPUT);
-
   Serial.begin(9600);
-
  Serial.println("buscando abajo");
  
   while(readFc0==true){
@@ -47,7 +45,7 @@ void setup() {
   readFc0 = digitalRead(fc0);
     
     }
-
+   flagAbajo = true;
   Serial.println("INICIO");
   
 
